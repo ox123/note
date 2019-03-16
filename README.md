@@ -18,11 +18,11 @@
 3. 编程语言
 > 编程语言需要深入学习，包含基础，IO、容器类、高并发、文件操作、网络编程等。
 
-    - python
-    - java
-    - go
-    - c/c++
-    - scala
+- python
+- java
+- go
+- c/c++
+- scala
 
 4. 后端框架
 > 学会使用，特别对于spring框架，理解其原理，深度mybatis源码。
