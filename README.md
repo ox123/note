@@ -34,6 +34,7 @@
 5. 存储
 > 对于数据存储类的技术栈，主要是在缓存方面，特别是redis，需要深入阅读器源码，同时了解其设计思路，MySQl数据库查询性能优化。对于Solr与ElasticSearch等搜索引擎框架需要深入学习其原理与实现。
 - redis缓存
+- Cassandra
 - MySQL数据库，PostGreSQL数据库
 - Solr搜索引擎
 - elasticsearch搜索框架
