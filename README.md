@@ -38,6 +38,7 @@
 - MySQL数据库，PostGreSQL数据库
 - Solr搜索引擎
 - elasticsearch搜索框架
+- 面向实时分析的时序数据库InfluxDB
 
 6. 容器
 > 借助容器学习，深入了解linux内核，特别是网络内核协议栈，包含netfilter以及iptables等

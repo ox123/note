@@ -11,6 +11,7 @@ class Singleton(object):
         return cls._instance  
 class MyClass(Singleton):  
     a = 1
+    
 ```
 
 ### 使用装饰器实现单例模式
