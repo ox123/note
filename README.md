@@ -21,7 +21,7 @@
 - python
 - java
 - go
-- c/c++
+- c/c++(重点学习计划)
 - scala
 
 4. 后端框架
