@@ -6,7 +6,8 @@ properties.load(in);
 ```
 ### java NIO MappedByteBuffer（MMAP实现）
 - https://www.jianshu.com/p/f90866dcbffc
-- MMAP 测试与深入解读https://blog.csdn.net/zhxdick/article/details/81130102
+- MMAP 测试与深入https://blog.csdn.net/zhxdick/article/details/81130102
+- 深入分析：https://mp.weixin.qq.com/s?__biz=MzI0NzEyODIyOA==&mid=2247484211&idx=1&sn=1a2e597fe3a039a5925db5f000bad872&chksm=e9b58af8dec203ee578e8903fa7df7abbedcb3f90592117a8885179cb64c72366481427df91d&scene=21#wechat_redirect
 ```java  
 // 读取文件
 public class MappedByteBufferTest {
