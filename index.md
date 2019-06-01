@@ -7,3 +7,7 @@
 #### kafka
 > IO
 - [Kafka为什么速度那么快](https://mp.weixin.qq.com/s/B0RjuajTKe94iz6FCRn1Fw)
+
+### java
+> 容器类
+- [CocurrentHashMap](langage/java/java基础/容器类/ConcurrentMap.md)
