@@ -11,3 +11,6 @@
 ### java
 > 容器类
 - [CocurrentHashMap](langage/java/java基础/容器类/ConcurrentMap.md)
+
+### 算法
+- [位运算编程技巧](https://mp.weixin.qq.com/s?__biz=MjM5NTY1MjY0MQ==&mid=2650745770&idx=3&sn=ca0805a6191020edea69054c6940b611&chksm=befebee4898937f287581e046f39f3352ce7c4564147b742a6c9a23c0b1654013cc450e317eb&mpshare=1&scene=23&srcid=#rd)
