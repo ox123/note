@@ -1,0 +1,3 @@
+- 后端限流： https://github.com/lrita/nginx_concurrent_limit_module
+- 动态修改upstream内存：https://github.com/yzprofile/ngx_http_dyups_module
+- 静态文件缓存：https://juejin.im/post/5af38e0c518825670c45ef6e
