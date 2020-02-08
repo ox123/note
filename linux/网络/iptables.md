@@ -14,3 +14,8 @@ http://www.cnblogs.com/LittleHann/p/3708222.html
     - FORWARD
     - POST_ROUTING
 
+### iptables
+
+- Netfilter所设置的规则是存放在内核内存中的，Iptables是一个应用层(Ring3)的应用程序，它通过Netfilter放出的接口来对存放在内核内存中的Xtables(Netfilter的配置表)进行修改
+(这是一个典型的Ring3和Ring0配合的架构)
+- Netfilter是负责实际的数据流改变工作的内核模块，而Xtables就是它的规则配置文件，Netfilter依照Xtables的规则来运行，Iptables在应用层负责修改这个规则文件

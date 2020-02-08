@@ -18,3 +18,6 @@ location / {
     fastcgi_param  SCRIPT_NAME        "";
 }
 ```
+
+### websocket配置
+- https://www.jianshu.com/p/07f37dd4657f

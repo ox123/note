@@ -6,7 +6,7 @@
    装饰器生成一个可调用的内存来保存最近调用，这个调用不超过maxsize指定的大小，并用其来装饰函数。当需要使用相同的参数周期性的调用I/O绑定函数或高消耗函数时，它可以保存时间。
 - functools. partial(func, *args, **keywords)
 ```python
->>>fromfunctoolsimport partial
+>>>from functools import partial
 
 >>>basetwo = partial(int, base=2)
 
