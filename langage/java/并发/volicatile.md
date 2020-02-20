@@ -5,7 +5,11 @@
   - Lock# 指令当前不锁总线，锁缓存
 
 ### synchronized使用
+
+用的锁存储在java的对象头中
 - 具体表现
   - 锁普通方法，锁是当前实例对象。
   - 锁静态同步方法块， 锁是当前类的Class对象。
   - 同步方法块， 所示synchronized括号里面配置的对象
+
+### static与finnal内存语义
