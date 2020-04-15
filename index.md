@@ -9,7 +9,8 @@
 #### kafka
 > IO
 - [Kafka为什么速度那么快](https://mp.weixin.qq.com/s/B0RjuajTKe94iz6FCRn1Fw)
-
+### store
+- [DLedger —基于 raft 协议的 commitlog 存储库](https://yq.aliyun.com/articles/713017?spm=a2c4e.11153940.0.0.59642ed7beDbfV)
 ### java
 > 容器类
 - [CocurrentHashMap](langage/java/java基础/容器类/ConcurrentMap.md)
