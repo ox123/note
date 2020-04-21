@@ -1,6 +1,9 @@
 ### 个人学习笔记
 - python
 - nginx
+### AWS认证考试
+- [aws考试认证](https://www.briefmenow.org/amazon/)
+- [认证考试](https://www.jianshu.com/p/739ec17c16fa)
 
 ### 技术路线
 1. LB负载均衡
