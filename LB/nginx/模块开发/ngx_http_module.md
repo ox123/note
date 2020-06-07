@@ -31,6 +31,7 @@ struct ngx_command_s {
 ### nginx处理调用的十一个阶段定义
 ```c
 typedef enum {
+    // 接收到完整的http头部后的处理阶段
     NGX_HTTP_POST_READ_PHASE = 0,
 
     NGX_HTTP_SERVER_REWRITE_PHASE,
