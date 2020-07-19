@@ -12,7 +12,16 @@
 
 ### 安装
 - pip install django
+
 - pip install MySQL
+
+  ````
+  #__init__.py文件中必须添加如下的内容 要使用mysql，此次一定不能少，否则会导致makemigrations失败
+  import pymysql
+  pymysql.install_as_MySQLdb()
+  ````
+
+  
 
 ### 常用操作命令
 - python manage.py makemigrations
@@ -121,9 +130,6 @@ from django.core.paginator import Paginator
 
 - 继承自View
 
-  
-
-
 
 ### 模板
 
@@ -219,4 +225,140 @@ from django.core.paginator import Paginator
 ### restfull风格
 
 - 参考文档：http://soong.site/drf/C01-IntroduceToDRF/DevelopRESTAPIWithDjango.html
+- 
+
+### 序列化
+
+- 对于模型类中的字段验证放在序列化中
+
+- 嵌套序列化
+
+  - 
+
+- ser= SystemInfoSerializer(data=data_dict)
+
+  - 验证数据：serializer.is_valid() 
+
+  - 获取验证后的结果： serializer.validated_data
+
+  - 自定义验证
+
+    ```python
+        # 单一字符按验证
+        def validate_name(self, value):
+            if value == 'python':
+                raise serializers.ValidationError("不能为python")
+            return value
+    
+        # 多个字段验证
+        def validate(self, attrs):
+            if attrs['readcount'] < 0:
+                raise serializers.ValidationError("xxx")
+            return attrs
+    ```
+
+  - 
+
+  
+
+### 反序列化
+
+- ```python
+  # 如果多个数据对象，则必须对于many=True
+  ret = SystemInfoSerializer(objects_all,many=True)
+  ret.data # 获取返回为json的数据
+  ```
+
+- 
+
+
+
+### DRF
+
+#### APIView
+
+```python
+from rest_framework.response import Response
+from rest_framework.views import APIView
+class SystemInfoView(APIView):
+    def get(self, request):
+       request.query_params # 获取参数
+       request.data # 获取body数据，类型为dict
+       return Response(data=ret.data)
+```
+
+##### GenericAPIView
+
+```python
+from rest_framework.generics import GenericAPIView
+
+class SystemInfoView(GenericAPIView):
+    # 指定当前类视图使用的查询集数据
+    queryset = SystemInfo.objects.all()
+    # 指定序列化器
+    serializer_class = SystemInfoSerializer
+
+    def get(self, request):
+        # 获取查询的所有数据
+        objects_all = self.get_queryset()
+
+        ret = self.get_serializer(objects_all, many=True)
+        # ret.is_valid()
+        return Response(data=ret.data)
+
+    def post(self, request):
+        data_dict = {}
+        serializer = self.get_serializer(data_dict, many=True)
+        serializer.is_valid()
+        # serializer.e
+        serializer.save()  # 调用序列化中的create方法
+        serializer.data()  ## 返回序列化值
+        pass
+
+    def put(self, request, pk):
+        data = request.data
+        # data = request.body.decode()
+        # data_dict = json.loads(data)
+        # 从查询中获取指定的单数据对象，pk与queryset 对比获取结果
+        get = self.get_object()
+        get.name = ""
+        get.save()
+        return Response({})
+
+```
+
+##### 拓展类（配合GenericAPIView使用）
+
+- ListModelMixin
+
+- CreateModelMixin
+
+- UpdateModelMixin
+
+- RetrieveModelMixin  获取单一数据对象
+
+- DestroyModelMixin 删除数据
+
+```python
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, \
+    DestroyModelMixin
+    
+class SystemInfoView(GenericAPIView,CreateModelMixin,ListModelMixin):
+    # 指定当前类视图使用的查询集数据
+    queryset = SystemInfo.objects.all()
+    # 指定序列化器
+    serializer_class = SystemInfoSerializer
+
+    def get(self, request):
+        # 获取查询的所有数据
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+```
+
+##### 拓展类子类
+
 - 
