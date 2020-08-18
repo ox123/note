@@ -20,11 +20,13 @@
 - rocketmq
 3. 编程语言
 > 编程语言需要深入学习，包含基础，IO、容器类、高并发、文件操作、网络编程等。 作为学习语言，必须搞懂并且熟练使用各种设计模式
+  
   - [mybatis源码中设计模式](http://www.crazyant.net/2022.html)
 
 - python
 - java
 - go
+  - [Go 语言设计与实现](https://draveness.me/golang/)
 - c/c++(重点学习计划)
 - scala
 
