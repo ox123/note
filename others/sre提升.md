@@ -112,11 +112,17 @@
 
 ### 如何衡量SLO的有效性
 
+### SLO落地
+
+- 核心链路，设定SLO，大的原则就是先设定核心链路的SLO，然后根据核心链路进行SLO的分解。
+  - 核心链路，确定核心应用与强弱依赖关系。
+- 核心应用之间的依赖关系，我们称之为**强依赖**
+
 ### MTTR
 
 <img src="assets/image-20200924160922744.png" alt="image-20200924160922744" style="zoom:80%;" />
 
-<img src="assets/image-20200924161022034.png" alt="image-20200924161022034" style="zoom: 50%;" />![image-20200924161117262](assets/image-20200924161117262.png)
+<img src="assets/image-20200924161022034.png" alt="image-20200924161022034" style="zoom: 50%;" /><img src="assets/image-20200924161117262.png" alt="image-20200924161117262" style="zoom:50%;" />
 
 <img src="assets/image-20200924161213460.png" alt="image-20200924161213460" style="zoom:50%;" />
 
@@ -166,3 +172,4 @@
 2. 流程机制
 3. 反馈机制
 
+- 
