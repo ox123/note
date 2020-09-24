@@ -1,4 +1,5 @@
 - google sre： https://landing.google.com/sre/workbook/toc/
+- MTTR, MTBF, or MTTF? – A Simple Guide To Failure Metrics: https://limblecmms.com/blog/mttr-mtbf-mttf-guide-to-failure-metrics/#
 
 ### 衡量系统可用性
 
@@ -110,4 +111,58 @@
    - 基于错误预算来做告警，我们指关注对稳定性有影响的告警。
 
 ### 如何衡量SLO的有效性
+
+### MTTR
+
+<img src="assets/image-20200924160922744.png" alt="image-20200924160922744" style="zoom:80%;" />
+
+<img src="assets/image-20200924161022034.png" alt="image-20200924161022034" style="zoom: 50%;" />![image-20200924161117262](assets/image-20200924161117262.png)
+
+<img src="assets/image-20200924161213460.png" alt="image-20200924161213460" style="zoom:50%;" />
+
+### MTTI
+
+这个环节主要有两件事情
+
+1. 判断出现的问题是不是故障。
+2. 确定由谁来响应和召集。
+
+### On-Call的流程机制建设
+
+1. 确保关键角色在线。随时应急响应。
+2. 素质War Room应急组织。
+3. 建立合理的呼叫方式。
+   - 熟悉某个系统的最快最好的方式就是参与On-Call，而不是看架构图和代码。
+4. 确保资源投入的升级机制。
+5. 如果服务有上云，与云厂商联合的On-Call机制。
+
+### 在故障处理过程中采取的所有手段和行动，一切以恢复业务为最高优先级
+
+### Design For Failure
+
+- https://queue-it.com/blog/design-for-failure-developer-perspective/
+
+### 问题处理总结
+
+- 故障隔离手段
+
+  系统设计的时候需要考虑问题，否则到出问题的时候，找不到合适的业务恢复技术手段。
+
+- 关键角色和流程机制
+
+  - 当出现问题时，需要有一个关键角色决策问题处理，分工明确，反馈与通报机制要完善
+
+- 平时故障演练
+
+  1. 总结故障隔离手段，限流与服务降级。
+  2. 完善应急流程，提升团队配合和协作的能力。
+
+### 如何建立有效的故障应急响应机制
+
+1. 关键角色分工
+   - **Incident Commander**，故障指挥官，曾哥指挥体系的核心，最重要的职责是组织和协调，而不是执行，下面的所有角色都要接受他的指令并严格执行。
+   - **Communication Leader**, 沟通引导，
+   - **Operations Leader**，负责指挥或者指导各种故障预案的执行与业务恢复。
+2. 流程机制
+3. 反馈机制
 
