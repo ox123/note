@@ -31,10 +31,22 @@
   - https://www.jianshu.com/p/4ba118333a19
 - innodb的索引原理
 
+### Redis
 
+- 
+
+### Spring
+
+- 谈谈Spring中都用到了那些设计模式：https://juejin.im/post/6844903849849962509
 
 ### 分布式理论
 
 - CAP理论
 - BASE理论
 - 
+
+
+
+### 面试连接
+
+- https://github.com/Snailclimb/JavaGuide
