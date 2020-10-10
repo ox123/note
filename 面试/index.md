@@ -33,7 +33,7 @@
 
 ### Redis
 
-- 
+- 为啥redis集群slot数量是16384？ https://bugwz.com/2019/09/06/redis-cluster-slots-num/#2-1-1-%E6%B6%88%E6%81%AF%E5%A4%B4%E4%BF%A1%E6%81%AF
 
 ### Spring
 
