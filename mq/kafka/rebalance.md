@@ -2,8 +2,6 @@
 
 ![image-20200629231929242](assets/image-20200629231929242.png)
 
-
-
 ### 当有消费者加入消费组时
 
 - Find_coordinator 阶段
@@ -51,6 +49,54 @@
 
   - 消费者的心跳间隔时间由参数heartbeat.interval.ms 指定，默认值为3000，即3s，这个参数比session.timeout.ms参数设定的值要小。一般heartbeat.interval.ms的值不能超过session.timeout.ms值的1/3,这个参数可以调整更低，以控制正常重新平衡的预期时间。
 
-  
+- **重平衡过程是如何通知到其他消费者实例的？答案就是，靠消费者端的心跳线程（Heartbeat Thread）**。
+
+### 消费者组状态机
+
+- Broker 端的协调者组件就要开始忙了，主要涉及到控制消费者组的状态流转，Kafka 为消费者组定义了 5 种状态，它们分别是：Empty、Dead、PreparingRebalance、CompletingRebalance 和 Stable
+
+  <img src="assets/image-20201028204446399.png" alt="image-20201028204446399" style="zoom:150%;" />
+
+- 状态机流转图
+
+  <img src="assets/image-20201028204526203.png" alt="image-20201028204526203" style="zoom:150%;" />
+
+
+#### 消费者端重平衡流程
+
+- 在消费者端，重平衡分为两个步骤：分别是加入组和等待领导者消费者（Leader Consumer）分配方案。这两个步骤分别对应两类特定的请求：**JoinGroup 请求和 SyncGroup 请求**。
+
+- **领导者消费者的任务是收集所有成员的订阅信息，然后根据这些信息，制定具体的分区消费分配方案。**
+
+- JoinGroup 请求的主要作用是将组成员订阅信息发送给领导者消费者，待领导者制定好分配方案后，重平衡流程进入到 SyncGroup 请求阶段。
+
+  <img src="assets/image-20201028215403184.png" alt="image-20201028215403184" style="zoom:150%;" />
+
+- SyncGroup 请求的主要目的，就是让协调者把领导者制定的分配方案下发给各个组内成员。当所有成员都成功接收到分配方案后，消费者组进入到 Stable 状态，即开始正常的消费工作。
+
+  <img src="assets/image-20201028215445396.png" alt="image-20201028215445396" style="zoom:150%;" />
+
+- 新成员入组流程
+
+  ![image-20201028220438358](assets/image-20201028220438358.png)
+
+- 成员主动离组
+
+  ![image-20201028220545725](assets/image-20201028220545725.png)
+
+- 崩溃离组
+
+  ![image-20201028220322228](assets/image-20201028220322228.png)
 
 - 
+
+
+
+#### kafka中zookeeper
+
+- 在zookeeper中创建节点如图
+
+![image-20201028224349348](assets/image-20201028224349348.png)
+
+#####  控制器作用
+
