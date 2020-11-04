@@ -81,3 +81,35 @@
 4. OAUTHBEARER：是基于 OAuth 2 认证框架的新机制，在 2.0 版本中被引进。
 5. Delegation Token：补充现有 SASL 机制的轻量级认证机制，是在 1.1.0 版本被引入的。
 
+
+
+### 监控
+
+**要做到 JVM 进程监控，有 3 个指标需要你时刻关注**
+
+1. Full GC 发生频率和时长。这个指标帮助你评估 Full GC 对 Broker 进程的影响。长时间的停顿会令 Broker 端抛出各种超时异常。
+2. 活跃对象大小。这个指标是你设定堆大小的重要依据，同时它还能帮助你细粒度地调优 JVM 各个代的堆大小。
+3. 应用线程总数。这个指标帮助你了解 Broker 进程对 CPU 的使用情况。
+
+**集群监控**
+
+1. 查看 Broker 进程是否启动，端口是否建立。
+2. 查看 Broker 端关键日志
+3. 查看 Broker 端关键线程的运行状态
+   - Log Compaction 线程，这类线程是以 ** kafka-log-cleaner-thread** 开头的。就像前面提到的，此线程是做日志 Compaction 的。一旦它挂掉了，所有 Compaction 操作都会中断，但用户对此通常是无感知的。
+   - 副本拉取消息的线程，通常以 **ReplicaFetcherThread 开头**。这类线程执行 Follower 副本向 Leader  副本拉取消息的逻辑。如果它们挂掉了，系统会表现为对应的 Follower 副本不再从 Leader 副本拉取消息，因而 Follower 副本的 Lag 会越来越大。
+4. 查看 Broker 端的关键 JMX 指标
+   - BytesIn/BytesOut：即 Broker 端每秒入站和出站字节数。你要确保这组值不要接近你的网络带宽，否则这通常都表示网卡已被“打满”，很容易出现网络丢包的情形。
+   - NetworkProcessorAvgIdlePercent：即网络线程池线程平均的空闲比例。通常来说，你应该确保这个 JMX  值长期大于 30%。如果小于这个值，就表明你的网络线程池非常繁忙，你需要通过增加网络线程数或将负载转移给其他服务器的方式，来给该 Broker  减负。
+   - RequestHandlerAvgIdlePercent：即 I/O 线程池线程平均的空闲比例。同样地，如果该值长期小于 30%，你需要调整 I/O 线程池的数量，或者减少 Broker 端的负载。
+   - UnderReplicatedPartitions：即未充分备份的分区数。所谓未充分备份，是指并非所有的 Follower 副本都和  Leader 副本保持同步。一旦出现了这种情况，通常都表明该分区有可能会出现数据丢失。因此，这是一个非常重要的 JMX 指标。
+   - ISRShrink/ISRExpand：即 ISR 收缩和扩容的频次指标。如果你的环境中出现 ISR 中副本频繁进出的情形，那么这组值一定是很高的。这时，你要诊断下副本频繁进出 ISR 的原因，并采取适当的措施。
+   - ActiveControllerCount：即当前处于激活状态的控制器的数量。正常情况下，Controller 所在 Broker  上的这个 JMX 指标值应该是 1，其他 Broker 上的这个值是 0。如果你发现存在多台 Broker 上该值都是 1  的情况，一定要赶快处理，处理方式主要是查看网络连通性。这种情况通常表明集群出现了脑裂。脑裂问题是非常严重的分布式故障，Kafka 目前依托  ZooKeeper 来防止脑裂。但一旦出现脑裂，Kafka 是无法保证正常工作的。
+5. 监控 Kafka 客户端
+   - 客户端与broker端时延
+   - 发送消息线程： kafka-producer-network-thread
+   - 心跳线程： kafka-coordinator-heartbeat-thread
+   -  Producer 角度，需要关注的 JMX 指标是 request-latency，即消息生产请求的延时
+   -  Consumer 角度来说，records-lag 和 records-lead 是两个重要的 JMX 指标
+6. 
+
