@@ -1,0 +1,4 @@
+- some
+- sealed trait 
+  - sealed class的所有子类，无论是否是抽象类，都必须跟 sealed class 在同一个文件中
+- 

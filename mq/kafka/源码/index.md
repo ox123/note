@@ -70,18 +70,104 @@ class LogSegment private[log] (val log: FileRecords,  // 实际保存的kafka消
     }
   ```
 
-  
+  ![image-20201119231009748](assets/image-20201119231009748.png)
 
 - read方法
 
   ```scala
-    def read(startOffset: Long,
-             maxSize: Int,
-             maxPosition: Long = size,
-             minOneMessage: Boolean = false): FetchDataInfo = {
+   def read(startOffset: Long, // 要读取的第一条消息的位移
+             maxSize: Int, // 能读取的最大位移数
+             maxPosition: Long = size, // 能读到的最大文件位置
+             minOneMessage: Boolean = false): FetchDataInfo = { 是否允许在消息过大时至少返回第一条信息
+      if (maxSize < 0)
+        throw new IllegalArgumentException(s"Invalid max size $maxSize for log read from segment $log")
+  
+      val startOffsetAndSize = translateOffset(startOffset)
+  
+      // if the start position is already off the end of the log, return null
+      if (startOffsetAndSize == null)
+        return null
+  
+      val startPosition = startOffsetAndSize.position
+      val offsetMetadata = LogOffsetMetadata(startOffset, this.baseOffset, startPosition)
+  
+      val adjustedMaxSize =
+        if (minOneMessage) math.max(maxSize, startOffsetAndSize.size)
+        else maxSize
+  
+      // return a log segment but with zero size in the case below
+      if (adjustedMaxSize == 0)
+        return FetchDataInfo(offsetMetadata, MemoryRecords.EMPTY)
+  
+      // calculate the length of the message set to read based on whether or not they gave us a maxOffset
+      val fetchSize: Int = min((maxPosition - startPosition).toInt, adjustedMaxSize)
+  
+      FetchDataInfo(offsetMetadata, log.slice(startPosition, fetchSize),
+        firstEntryIncomplete = adjustedMaxSize < startOffsetAndSize.size)
     }
   ```
 
+  ![image-20201119230951435](assets/image-20201119230951435.png)
+
+- Recover方法
+
+  - kafka在broker启动时会从磁盘上加载所有的日志段信息到内存中，并创建相应的LogSegment对象实例
+
+  ```scala
+   def recover(producerStateManager: ProducerStateManager, leaderEpochCache: Option[LeaderEpochFileCache] = None): Int = {
+      offsetIndex.reset()
+      timeIndex.reset()
+      txnIndex.reset()
+      var validBytes = 0
+      var lastIndexEntry = 0
+      maxTimestampSoFar = RecordBatch.NO_TIMESTAMP
+      try {
+        for (batch <- log.batches.asScala) {
+          batch.ensureValid()
+          ensureOffsetInRange(batch.lastOffset)
   
+          // The max timestamp is exposed at the batch level, so no need to iterate the records
+          if (batch.maxTimestamp > maxTimestampSoFar) {
+            maxTimestampSoFar = batch.maxTimestamp
+            offsetOfMaxTimestampSoFar = batch.lastOffset
+          }
+  
+          // Build offset index
+          if (validBytes - lastIndexEntry > indexIntervalBytes) {
+            offsetIndex.append(batch.lastOffset, validBytes)
+            timeIndex.maybeAppend(maxTimestampSoFar, offsetOfMaxTimestampSoFar)
+            lastIndexEntry = validBytes
+          }
+          validBytes += batch.sizeInBytes()
+  
+          if (batch.magic >= RecordBatch.MAGIC_VALUE_V2) {
+            leaderEpochCache.foreach { cache =>
+              if (batch.partitionLeaderEpoch >= 0 && cache.latestEpoch.forall(batch.partitionLeaderEpoch > _))
+                cache.assign(batch.partitionLeaderEpoch, batch.baseOffset)
+            }
+            updateProducerState(producerStateManager, batch)
+          }
+        }
+      } catch {
+        case e@ (_: CorruptRecordException | _: InvalidRecordException) =>
+          warn("Found invalid messages in log segment %s at byte offset %d: %s. %s"
+            .format(log.file.getAbsolutePath, validBytes, e.getMessage, e.getCause))
+      }
+      val truncated = log.sizeInBytes - validBytes
+      if (truncated > 0)
+        debug(s"Truncated $truncated invalid bytes at the end of segment ${log.file.getAbsoluteFile} during recovery")
+  
+      log.truncateTo(validBytes)
+      offsetIndex.trimToValidSize()
+      // A normally closed segment always appends the biggest timestamp ever seen into log segment, we do this as well.
+      timeIndex.maybeAppend(maxTimestampSoFar, offsetOfMaxTimestampSoFar, skipFullCheck = true)
+      timeIndex.trimToValidSize()
+      truncated
+    }
+  ```
+
+  ![image-20201119231648756](assets/image-20201119231648756.png)
+
+  ![image-20201119231921067](assets/image-20201119231921067.png)
 
 - 
