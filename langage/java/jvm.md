@@ -193,12 +193,11 @@
 
 - 并行 GC 和 CMS 的基本原理。
   优势：可以处理循环依赖，只扫描部分对象  
-
 - 默认15次gc还存活的对象移动到老年代
   - -XX:+MaxTenuringThreshold=15  
-
-- Eden->S0, 为啥是复制而不是移动？
-
+- Eden->S0, **为啥是复制而不是移动？**
+  - 年轻代是复制
+  - 老年代是移动
 - 元数据区  
   - -XX:MaxMetaspaceSize=256m  
 - -XX： ParallelGCThreads=N 来指定 GC 线程数， 其默认值为 CPU 核心数。  
