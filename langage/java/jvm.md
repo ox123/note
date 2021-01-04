@@ -307,3 +307,12 @@
 - java -XX:+PrintGCDetails GCLogAnalysis
 - java -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps  GCLogAnalysis  
 - 并行gc，堆内存为物理内存的1/4
+
+- **串行GC**: java -XX:+UseParallelGC -Xms512m -Xmx512m -Xloggc:gc.demo.log  -XX:+PrintGCDetails  -XX:+PrintGCDateStamps GCLogAnalysis  
+- **CMS GC**:  java -XX:+UseConcMarkSweepGC -Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis  
+- **G1 GC**: java -XX:+UseG1GC -Xms512m -Xmx512m -Xloggc:gc.demo.log  -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis  
+
+### 工具
+
+- fastthread
+- 
