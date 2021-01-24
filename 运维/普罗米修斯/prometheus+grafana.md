@@ -30,8 +30,6 @@
    sudo systemctl enable node_exporter
    ```
 
-
-
 ### prometheus
 
 1. wget https://github.com/prometheus/prometheus/releases/download/v2.24.1/prometheus-2.24.1.linux-amd64.tar.gz
@@ -57,15 +55,11 @@
      WantedBy=multi-user.target
    ```
 
-   
-
 3. systemctl daemon-reload
 
 4. systemctl enable prometheus
 
 5. systemctl start prometheus
-
-
 
 ### grafana
 
