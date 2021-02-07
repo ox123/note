@@ -1,0 +1,63 @@
+### Pattern: Backends For Frontends
+
+- https://samnewman.io/patterns/architectural/bff/
+
+### 平滑上线
+
+- 滚动下线
+- 蓝绿发布
+- 金丝雀发布
+- 染色发布
+
+
+
+### 服务发现- 客户端服务发现
+
+- 去中心化，客户端直接互联
+- 客户端使用一个负载均衡算法，去选择一个可用的服务实例，来响应这种请求
+- 直连，比服务端发现少一次网络转跳，内置服务注册于发现
+
+### 服务发现-服务端发现
+
+- 使用ngin作为负载均衡
+- consul template+nginx，kubernates+etcd
+- Ingress LB
+- 链路较长，性能可能有损失
+
+### 服务注册于发现选择
+
+- etcd
+- consul
+- zookeeper
+- nacos
+
+### ServiceMesh
+
+- 微服务的核心是去中心化
+- sidecar
+
+> Linux环境高级编程
+>
+> bilibili  服务注册于发现  https://github.com/bilibili/discovery
+>
+> Google SRE
+
+
+
+### 多集群
+
+- 多个机房，多个集群
+
+## 
+
+### 多租户
+
+- 租户可以是测试，金丝雀发布，影子系统，甚至服务层或者产品线，使用租户能够抱枕代码的隔离性兵器能够基于流量租户做路由决策。
+- FAT  feature automation test
+
+
+
+
+
+
+
