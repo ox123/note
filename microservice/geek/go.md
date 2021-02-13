@@ -2,6 +2,9 @@
 
 - https://samnewman.io/patterns/architectural/bff/
 
+- CQRS
+- 
+
 ### 平滑上线
 
 - 滚动下线
