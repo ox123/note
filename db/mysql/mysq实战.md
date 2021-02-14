@@ -34,3 +34,8 @@
 
 ### 页分裂
 
+### 参数含义
+
+- innodb_undo_tablespaces 
+- 
+
