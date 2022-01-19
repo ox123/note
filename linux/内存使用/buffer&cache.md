@@ -17,9 +17,7 @@ dd if=/dev/urandom of=/tmp/file bs=1M count=500
 #### 清理文件页、目录项、Inodes 等各种缓存
 
 ```shell
-
+echo 3 > /proc/sys/vm/drop_caches
 ```
-
-
 
 
