@@ -1,49 +1,56 @@
 ### 创建admin用户名与密码
+
 - pycharm中Tools-》Run manage task
 - makemigrations
 - migrate
 - createsuperuser
 
 ### c创建项目
+
 - django-admin startproject mysite
 - 运行程序 python manage.py runserver
-### 创建app
+  
+  ### 创建app
 - python manage.py startapp blog
 
 ### 安装
+
 - pip install django
 
 - pip install MySQL
-
-  ````
+  
+  ```
   #__init__.py文件中必须添加如下的内容 要使用mysql，此次一定不能少，否则会导致makemigrations失败
   import pymysql
   pymysql.install_as_MySQLdb()
-  ````
-
-  
+  ```
 
 ### 常用操作命令
+
 - python manage.py makemigrations
 - python manage.py migrate
 - python manage.py shell
 
 ### 创建管理员账户
+
 - python manage.py createsuperuser
 
 ### 数据操作
+
 1. SystemInfo.objects().all()
+
 2. SystemInfo.objects.filter() # 筛选返回n个结果
+
 3. exclude() === not in
 - F对象语法格式
-
+  
   ```django
   from django.db.models import F
   filter(id__gte==F('count'))
   ```
 
 - Q对象
-
+  
   ```django
   from django.db.models import Q
   # 或者语法
@@ -52,16 +59,12 @@
   filter(Q(id__gt==2) && Q(name__in='xx'))
   # not == ~Q()
   ```
-
 4. 聚合函数
-
+   
    ```
    from django.db.models import sum
    SystemInfo.objects.aggregate(sum('id'))
    ```
-
-
-
 
 ### 分页数据查询
 
@@ -72,7 +75,7 @@ from django.core.paginator import Paginator
 ### 页面视图
 
 - 跳转： 
-
+  
   ```python
   path('admin/', admin.site.urls,name="index"),
   
@@ -81,7 +84,7 @@ from django.core.paginator import Paginator
   ```
 
 - 通过名字获取路径
-
+  
   ```python
   from django.urls import reverse
   path = reverse("index") // 动态路由信息获取
@@ -89,7 +92,7 @@ from django.core.paginator import Paginator
   ```
 
 - namespace
-
+  
   ```python
   path(r'back/', include("backend.urls",namespace="backend")),
   namepsace:name # 获取动态路由
@@ -97,30 +100,30 @@ from django.core.paginator import Paginator
   ```
 
 - HttpRequest对象
-
+  
   - 位置参数 /year/id
-
+  
   - 关键字参数  ?P<id>\d+
-
+  
   - get请求参数  
-
-    -  获取字符串值：request.GET.get("username")
-
+    
+    - 获取字符串值：request.GET.get("username")
+    
     - 获取列表参数：request.GET.getList("username")
-
+  
   - POST数据
-
+    
     - POST参数： request.POST
-
+  
   - 获取body数据： request.body.decode()  # 数据格式为bytes，转换之后为字符串数据，
-
+  
   - ```python
     json.dumps(request.body.decode()) # 将字典转换为json字符串
     json.loads() # 将json字符串转换为dict
     ```
 
 - HttpResponse对象
-
+  
   - data参数不要为对象和字典类型，传递字符串类型
   - 如果返回为json字符串，则直接使用JsonResponse
 
@@ -130,24 +133,23 @@ from django.core.paginator import Paginator
 
 - 继承自View
 
-
 ### 模板
 
--  获取变量值： {{}}
+- 获取变量值： {{}}
 
 - {% for i  in list %} ... {% endfor %}
 
 - 列表循环有关数据：forloop.counter 获取index数据
 
 - 过滤器(其实就是一个函数)
-
+  
   - 变量 | 过滤器：参数  ```value | date: "Y:m:d"```
   - safe 
   - default
   - length
 
 - 继承视图： 
-
+  
   ```
   {% extends 'base.html'%}
   
@@ -158,14 +160,12 @@ from django.core.paginator import Paginator
   {% endblock main %}
   ```
 
-  
-
 - jinjia2 模板
-
+  
   - pip install jinjia2
 
 - 设置模板引擎
-
+  
   ```
   # 与模板有关的配置
   TEMPLATES = [
@@ -178,18 +178,18 @@ from django.core.paginator import Paginator
           }
   ]
   ```
-
+  
   - jinja2 没有多行注释
-
+  
   - jiaja扩展函数配置
-
+    
     ```python
     from django.templatetags.static import static
     from django.urls import reverse
     
     from jinja2 import Environment
-    
-    
+    ```
+
     def environment(**options):
         env = Environment(**options)
         env.globals.update({
@@ -200,21 +200,18 @@ from django.core.paginator import Paginator
         return env
     ```
 
-  - pycharm设置jinja模板
+- pycharm设置jinja模板
+  
+  <img src="assets/image-20200718223207831.png" alt="image-20200718223207831" style="zoom:25%;" />
 
-    <img src="assets/image-20200718223207831.png" alt="image-20200718223207831" style="zoom:25%;" />
-
-  - jinja 自定义过滤器
-
-
-
+- jinja 自定义过滤器
 
 ### CSRF
 
 - Cross Site Request Forgery 跨站请求伪造
 
 - 使用短信验证码或者邮件验证码解决此问题
-
+  
   ```python
   from django.middleware.csrf import get_token
   csrf_token = get_token(request)
@@ -232,17 +229,17 @@ from django.core.paginator import Paginator
 - 对于模型类中的字段验证放在序列化中
 
 - 嵌套序列化
-
+  
   - 
 
 - ser= SystemInfoSerializer(data=data_dict)
-
+  
   - 验证数据：serializer.is_valid() 
-
+  
   - 获取验证后的结果： serializer.validated_data
-
+  
   - 自定义验证
-
+    
     ```python
         # 单一字符按验证
         def validate_name(self, value):
@@ -256,10 +253,8 @@ from django.core.paginator import Paginator
                 raise serializers.ValidationError("xxx")
             return attrs
     ```
-
-  - 
-
   
+  - 
 
 ### 反序列化
 
@@ -270,8 +265,6 @@ from django.core.paginator import Paginator
   ```
 
 - 
-
-
 
 ### DRF
 
@@ -324,7 +317,6 @@ class SystemInfoView(GenericAPIView):
         get.name = ""
         get.save()
         return Response({})
-
 ```
 
 ##### 拓展类（配合GenericAPIView使用）
@@ -343,7 +335,7 @@ class SystemInfoView(GenericAPIView):
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, \
     DestroyModelMixin
-    
+
 class SystemInfoView(GenericAPIView,CreateModelMixin,ListModelMixin):
     # 指定当前类视图使用的查询集数据
     queryset = SystemInfo.objects.all()
@@ -356,14 +348,11 @@ class SystemInfoView(GenericAPIView,CreateModelMixin,ListModelMixin):
 
     def post(self, request):
         return self.create(request)
-
 ```
 
 ##### 拓展类子类
 
 - 
-
-
 
 ### 日志配置
 
@@ -413,4 +402,3 @@ LOGGING = {
 import loggin
 log = logging.getLogger('django')
 ```
-
