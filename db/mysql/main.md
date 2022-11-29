@@ -11,7 +11,7 @@ sync _relay_log_info
 2. 确认字段
 
 3. 创建数据表
-
+   
    ```mysql
    CREATE TABLE demo.test
    (
@@ -20,28 +20,24 @@ sync _relay_log_info
        price int
    );
    ```
-
+   
    - 查看表结构
-
+     
      ```mysql
      DESCRIBE test; 
      ```
-
+   
    - 查看数据表
-
+     
      ```mysql
      SHOW TABLES;
      ```
 
 4. 插入数据
 
-
-
 ->**老师，面试遇到的一个问题，select count(*) from t; t中有id(主键)，name，age,sex4个字段。假设数据10条，对sex添加索引。用explain 查 看执行计划发现用了sex索引，为什么不是主键索引呢?主键索引应该更快的 ***
 
 *作者回复: 问题很好，下面是我的理解，供你参考： 1. MySQL Innodb的主键索引是一个B+树，数据存储在叶子节点上，10条数据，就有10个叶子 节点。 2. sex索引是辅助索引，也是一个B+树，不同之处在于，叶子节点存储的是主键值，由于sex只有 2个可能的值：男和女，因此，这个B+树只有2个叶子节点，比主键索引的B+树小的多 3. 这个表有主键，因此不存在所有字段都为空的记录，所以COUNT(*)只要统计所有主键的值就 可以了，不需要回表读取数据 4. SELECT COUNT(*) FROM t，使用sex索引，只需要访问辅助索引的小B+树，而使用主键索 引，要访问主键索引的那个大B+树，明细工作量大，这就是为什么，优化器使用辅助索引的原因
-
-
 
 ```mysql
 CREATE TABLE goodsmaster
@@ -97,8 +93,8 @@ CREATE TABLE UserLogin (
 
 SET @a = '
 {
-	"cellphone" : "13918888888",
-	"wxchat" : "破产码农",
+    "cellphone" : "13918888888",
+    "wxchat" : "破产码农",
     "QQ" : "82946772"
 }
 ';
@@ -107,7 +103,7 @@ INSERT INTO UserLogin VALUES (1,@a);
 
 SET @b = '
 {
-	"cellphone" : "15026888888"
+    "cellphone" : "15026888888"
 }
 ';
 
@@ -124,7 +120,6 @@ SELECT
     loginInfo->>"$.cellphone" cellphone,
     loginInfo->>"$.wxchat" wxchat
 FROM UserLogin;
-
 ```
 
 当 JSON 数据量非常大，用户希望对 JSON 数据进行有效检索时，可以利用 MySQL 的**函数索引**功能对 JSON 中的某个字段进行索引。
@@ -132,6 +127,4 @@ FROM UserLogin;
 ```mysql
 ALTER TABLE UserLogin ADD COLUMN cellphone VARCHAR(255) AS (loginInfo->>"$.cellphone");
 ALTER TABLE UserLogin ADD UNIQUE INDEX idx_cellphone(cellphone);
-
 ```
-
