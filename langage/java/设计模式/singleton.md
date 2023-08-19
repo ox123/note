@@ -1,4 +1,5 @@
 ### 单利模式
+
 ```java
 public class Singleton {
     private Singleton(){}
