@@ -21,28 +21,25 @@
 3. 常量在编译期间会存入调用类的常量池中，本质上并没有直接引用定义常量的类，不会触发定义常量所在的类；
 4. 通过类名获取Class对象，不会触发类的初始化，Hello.class不会让Hello类初始化；
 
-
-
 ### 类加载器
 
 - BootstrapClassLoader
-- ExtClassLoader
-- AppClassLoader
-- URLClassLoader
 
+- ExtClassLoader
+
+- AppClassLoader
+
+- URLClassLoader
 1. 双亲委托
 
 2. 负责依赖
 
 3. 缓存加载
+   
    - 同一个类型只会加载一次
    - 缓存已经加载的类
 
-
-
 ### 自定义ClassLoader
-
-
 
 ### 添加引用类的几种方式
 
@@ -110,7 +107,6 @@
      used     = 53512648 (51.03363800048828MB)
      free     = 7140920 (6.810111999511719MB)
      88.22671075178957% used
-  
   ```
 
 - 默认为G1收集器，jdk < 8 为并行收集器，java jdk9 开始为G1
@@ -118,7 +114,7 @@
 ### jcmd
 
 - jcmd 5750 help
-
+  
   ```
   5750:
   The following commands are available:
@@ -149,7 +145,6 @@
   VM.command_line
   VM.version
   help
-  
   ```
 
 - jcmd 5750 VM.version
@@ -161,20 +156,20 @@
 - jrunscript -e "cat (baidu.com)"
 
 - 执行js片段
-
+  
   ```
   jrunscript -e "print('hello,kk.jvm'+1)
   ```
 
 - 执行js代码
-
+  
   ```
   jrunscript -l js -f /XXX/XXX/test.js
   ```
 
 ### jconsole
 
-### jvisualvm  
+### jvisualvm
 
 ---
 
@@ -212,12 +207,14 @@
   其对年轻代采用并行 STW 方式的 mark-copy (标记-复制)算法，对老年代主要使用并发 marksweep (标记-清除)算法。
   CMS GC 的设计目标是避免在老年代垃圾收集时出现长时间的卡顿，主要通过两种手段来达成此
   目标：
+  
   1. 不对老年代进行整理，而是使用空闲列表（ free-lists） 来管理内存空间的回收。
   2. 在 mark-and-sweep （ 标记-清除） 阶段的大部分工作和应用线程一起并发执行。也就是说，在这些阶段并没有明显的应用线程暂停。但值得注意的是，它仍然和应用线程争抢CPU 时间。默认情况下，**CMS 使用的并发线程数等于 CPU 核心数的 1/4**。
   3. 如果服务器是多核 CPU，并且主要调优目标是降低 GC 停顿导致的系统延迟，那么使用 CMS 是个很明智的选择。进行老年代的并发回收时，可能会伴随着多次年轻代的 minor GC。
      思考：并行 Parallel 与并发 Concurrent 的区别？  
 
 - CMS 六个阶段， Concurrent开始的业务并没有暂停
+  
   - Initial Mark 初始标记
   - Concurrent Mark 并发标记
   - Concurrent Preclean 并发预清理
@@ -227,8 +224,11 @@
   - 
 
 - MaxHeapSize 默认分配机器的1/4 物理内存
+
 - NewSize  物理内存的1/64
+
 - MaxNewSize 对并行GC有效
+
 - <8 并行，9是G1（CMS标记为过时）
 
 ### G1
@@ -248,7 +248,7 @@
   **-XX:+InitiatingHeapOccupancyPercent**（简称 IHOP）： G1 内部并行回收循环启动的阈值，默认为 Java Heap的 45%。这个可以理解为老年代使用大于等于45% 的时候， JVM 会启动垃圾回收。这个值非常重要，它决定了在什么时间启动老年代的并行回收。
   **-XX:G1HeapWastePercent**： G1停止回收的最小内存大小，默认是堆大小的 5%。 GC 会收集所有的 Region 中的对象，但是如果下降到了 5%，就会停下来不再收集了。就是说，不必每次回收就把所有的垃圾都处理完，可以遗留少量的下次处理，这样也降低了单次消耗的时间。
   **-XX:G1MixedGCCountTarget**：设置并行循环之后需要有多少个混合 GC 启动，默认值是 8 个。老年代 Regions的回收时间通常比年轻代的收集时间要长一些。所以如果混合收集器比较多，可以允许 G1 延长老年代的收集时间。  
-
+  
   -XX： +G1PrintRegionLivenessInfo：这个参数需要和 -XX:+UnlockDiagnosticVMOptions 配合启动，打印 JVM 的调试信息，每个 Region 里的对象存活信息。
   -XX： G1ReservePercent： G1 为了保留一些空间用于年代之间的提升，默认值是堆空间的 10%。因为大量执行回收的地方在年轻代（存活时间较短），所以如果你的应用里面有比较大的堆内存空间、比较多的大对象存活，这里需要保留一些内存。
   -XX： +G1SummarizeRSetStats：这也是一个 VM 的调试信息。如果启用，会在 VM 退出的时候打印出 Rsets 的详细总结信息。如果启用 -XX:G1SummaryRSetStatsPeriod 参数，就会阶段性地打印 Rsets 信息。
@@ -266,7 +266,7 @@
   1. GC 最大停顿时间不超过 10ms
   2. 堆内存支持范围广，小至几百 MB 的堆空间，大至 4TB 的超大堆内存（ JDK13 升至 16TB）
   3. 与 G1 相比，应用吞吐量下降不超过 15%
-  4.  当前只支持 Linux/x64 位平台， JDK15 后支持 MacOS 和Windows 系统  
+  4. 当前只支持 Linux/x64 位平台， JDK15 后支持 MacOS 和Windows 系统  
 
 ---
 
@@ -282,11 +282,11 @@
 **所有 GC 算法，一共有 7 类**
 
 1. 串行 GC（Serial GC）: 单线程执行，应用需要暂停；
-2.  并行 GC（ParNew、Parallel Scavenge、Parallel Old）: 多线程并行地执行垃圾回收，关注与高吞吐；
+2. 并行 GC（ParNew、Parallel Scavenge、Parallel Old）: 多线程并行地执行垃圾回收，关注与高吞吐；
 3. CMS（Concurrent Mark-Sweep）: 多线程并发标记和清除，关注与降低延迟；
 4. G1（G First）: 通过划分多个内存区域做增量整理和回收，进一步降低延迟；
 5. ZGC（Z Garbage Collector）: 通过着色指针和读屏障，实现几乎全部的并发执行，几毫秒级别的延迟，线性可扩展；
-6.  Epsilon: 实验性的 GC，供性能分析使用；
+6. Epsilon: 实验性的 GC，供性能分析使用；
 7. Shenandoah: G1 的改进版本，跟 ZGC 类似  
 
 **GC 算法和实现的演进路线**
@@ -294,7 +294,7 @@
 1. 串行 -> 并行: 重复利用多核 CPU 的优势，大幅降低 GC 暂停时间，提升吞吐量。
 2. 并行 -> 并发： 不只开多个 GC 线程并行回收，还将GC操作拆分为多个步骤，让很多繁重的任务和应用线程一起并发执行，减少了单次 GC 暂停持续的时间，这能有效降低业务系统的延迟。
 3. CMS -> G1： G1 可以说是在 CMS 基础上进行迭代和优化开发出来的，划分为多个小堆块进行增量回收，这样就更进一步地降低了单次 GC 暂停的时间
-4.  G1 -> ZGC:： ZGC 号称无停顿垃圾收集器，这又是一次极大的改进。 ZGC 和 G1 有一些相似的地方，但是底层的算法和思想又有了全新的突破。
+4. G1 -> ZGC:： ZGC 号称无停顿垃圾收集器，这又是一次极大的改进。 ZGC 和 G1 有一些相似的地方，但是底层的算法和思想又有了全新的突破。
 
 ---
 
@@ -305,15 +305,18 @@
 ### GC 日志分析
 
 - java -XX:+PrintGCDetails GCLogAnalysis
+
 - java -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps  GCLogAnalysis  
+
 - 并行gc，堆内存为物理内存的1/4
 
 - **串行GC**: java -XX:+UseParallelGC -Xms512m -Xmx512m -Xloggc:gc.demo.log  -XX:+PrintGCDetails  -XX:+PrintGCDateStamps GCLogAnalysis  
+
 - **CMS GC**:  java -XX:+UseConcMarkSweepGC -Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis  
+
 - **G1 GC**: java -XX:+UseG1GC -Xms512m -Xmx512m -Xloggc:gc.demo.log  -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis  
 
 ### 工具
 
 - fastthread
 - hasdb
-
