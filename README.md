@@ -1,10 +1,13 @@
 ### 个人学习笔记
 
 - python
+
 - nginx
   
   ### AWS认证考试
+
 - [aws考试认证](https://www.briefmenow.org/amazon/)
+
 - [认证考试](https://www.jianshu.com/p/739ec17c16fa)
 
 ### 技术路线
@@ -57,3 +60,15 @@
 - linux网络内核
 
 -- sync 报文攻击
+
+### 摄影与设计
+
+- https://pixabay.com/
+
+- 日系：https://www.woodylaulau.com/
+
+- https://justinleonbrown.com/about
+
+- https://www.hideakihamada.com/#1
+
+- 
