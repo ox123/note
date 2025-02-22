@@ -17,11 +17,11 @@
 <img src="assets/image-20201102212707561.png" alt="image-20201102212707561" style="zoom:150%;" />
 
 > Note: 后端 I/O 线程其实是有名字的，名字的前缀是  kafka-admin-client-thread。有时候我们会发现，AdminClient 程序貌似在正常工作，但执行的操作没有返回结果，或者 hang 住了，现在你应该知道这可能是因为 I/O 线程出现问题导致的。如果你碰到了类似的问题，不妨使用**jstack 命令**去查看一下你的 AdminClient 程序，确认下 I/O 线程是否在正常工作。
->
+> 
 > 这可不是我杜撰出来的好处，实际上，这是实实在在的社区 bug。出现这个问题的根本原因，就是 I/O 线程未捕获某些异常导致意外“挂”掉。由于 AdminClient  是双线程的设计，前端主线程不受任何影响，依然可以正常接收用户发送的命令请求，但此时程序已经不能正常工作了。
 
 - 创建主题
-
+  
   ```java
   String newTopicName = "test-topic";
   
@@ -33,7 +33,7 @@
   ```
 
 - 查询消费者组位移
-
+  
   ```java
   String groupID = "test-group";
   try (AdminClient client = AdminClient.create(props)) {
@@ -45,7 +45,7 @@
   ```
 
 - 查看磁盘占用
-
+  
   ```java
   try (AdminClient client = AdminClient.create(props)) {
   
@@ -81,8 +81,6 @@
 4. OAUTHBEARER：是基于 OAuth 2 认证框架的新机制，在 2.0 版本中被引进。
 5. Delegation Token：补充现有 SASL 机制的轻量级认证机制，是在 1.1.0 版本被引入的。
 
-
-
 ### 监控
 
 **要做到 JVM 进程监控，有 3 个指标需要你时刻关注**
@@ -109,7 +107,6 @@
    - 客户端与broker端时延
    - 发送消息线程： kafka-producer-network-thread
    - 心跳线程： kafka-coordinator-heartbeat-thread
-   -  Producer 角度，需要关注的 JMX 指标是 request-latency，即消息生产请求的延时
-   -  Consumer 角度来说，records-lag 和 records-lead 是两个重要的 JMX 指标
+   - Producer 角度，需要关注的 JMX 指标是 request-latency，即消息生产请求的延时
+   - Consumer 角度来说，records-lag 和 records-lead 是两个重要的 JMX 指标
 6. 
-
